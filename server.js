@@ -7,6 +7,9 @@ const app = express();
 const port = 5213;
 
 var jsonParser = bodyParser.json();
+app.get("/", (req, res) => {
+  res.send("good");
+});
 
 app.post("/", jsonParser, (req, res) => {
   const access_token = req.body.access_token;
@@ -16,42 +19,7 @@ app.post("/", jsonParser, (req, res) => {
   const signing_key = req.body.signing_key;
   const utc_now = new Date().toISOString();
   const trace_id = uuidv4();
-  const body = {
-    totalAmount: 3.77,
-    currencyCode: "HKD",
-    effectiveDuration: 600,
-    notificationUri:
-      "https://webhook.site/a8355331-d748-4951-bf6b-7e02f6fce605",
-    appSuccessCallback: "www.example.com/success",
-    appFailCallback: "www.example.com/failure",
-    merchantData: {
-      orderId: "ID12345678",
-      orderDescription: "Description displayed to customer",
-      additionalData: "Arbitrary additional data - logged but not displayed",
-      shoppingCart: [
-        {
-          category1: "General categorization",
-          category2: "More specific categorization",
-          category3: "Highly specific categorization",
-          quantity: 1,
-          price: 1,
-          name: "Item 1",
-          sku: "SKU987654321",
-          currencyCode: "HKD",
-        },
-        {
-          category1: "General categorization",
-          category2: "More specific categorization",
-          category3: "Highly specific categorization",
-          quantity: 2,
-          price: 1,
-          name: "Item 2",
-          sku: "SKU678951234",
-          currencyCode: "HKD",
-        },
-      ],
-    },
-  };
+  const body = req.body.body;
   const raw = JSON.stringify(body);
   const digest = lib.computedDigest(raw);
   const config = lib.getConfig(signing_key_id, signing_key);
